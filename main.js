@@ -1,7 +1,7 @@
 /*
  * @Author: Heng
  * @Date: 2020-05-01 08:48:29
- * @LastEditTime: 2020-08-08 14:55:40
+ * @LastEditTime: 2020-08-10 09:47:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /FillTitle/main.js
@@ -52,17 +52,25 @@ JSB.newAddon = function (mainPath) {
             let expansion=UIPasteboard.generalPasteboard().string;//获取扩充文本
             let note = sender.userInfo.note;
             let title = note.noteTitle;
-            
+            if (expansion==undefined || expansion==""){
+                Application.sharedInstance().showHUD("剪贴板为空！", self.window, 2);
+                
+            }
+            else{
             //添加前缀
             //let titleText = expansion + title;
             //添加后缀
             //let titleText = title + expansion;
             //添加标题
             let titleText = title +";"+expansion;
-            
             note.noteTitle = titleText;
             Database.sharedInstance().setNotebookSyncDirty(note.notebookId);//同步到数据库
             NSNotificationCenter.defaultCenter().postNotificationNameObjectUserInfo('RefreshAfterDBChange',self,{topicid:note.notebookId});
+
+            }
+            
+            
+            
         },
         toggleFillTitle: function (sender) {
             var lan = NSLocale.preferredLanguages().length ? NSLocale.preferredLanguages()[0].substring(0, 2) : 'en';
